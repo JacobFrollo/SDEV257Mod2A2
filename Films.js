@@ -4,13 +4,13 @@ import styles from "./styles";
 
 //Finds films and sends them
 export default function Films() {
-    const [planets, setPlanets] = useState([]);
+    const [films, setFilms] = useState([]);
 
     useEffect(() => {
         fetch("https://www.swapi.tech/api/films")
             .then((resp) => resp.json())
             .then(({ results }) => {
-                setPlanets(results);
+                setFilms(results);
             })
             .catch((error) => {
                 console.log(error.message);
@@ -21,7 +21,7 @@ export default function Films() {
         <View style={styles.container}>
             <Text style={styles.title}>Films</Text>
             <FlatList
-                data={planets}
+                data={films}
                 keyExtractor={(item) => item.uid}
                 renderItem={({ item }) => (
                     <View style={styles.item}>
