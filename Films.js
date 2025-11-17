@@ -25,10 +25,11 @@ export default function Films() {
                 keyExtractor={(item) => item.uid}
                 renderItem={({ item }) => (
                     <View style={styles.item}>
-                        <Text>{item.name}</Text>
+                        <Text>{item.title</Text>
                     </View>
                 )}
             />
         </View>
     );
+
 }
