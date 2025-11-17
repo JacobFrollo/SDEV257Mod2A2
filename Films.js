@@ -1,11 +1,34 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import styles from "./styles";
 
-export default function Home() {
+//Finds films and sends them
+export default function Films() {
+    const [planets, setPlanets] = useState([]);
+
+    useEffect(() => {
+        fetch("https://www.swapi.tech/api/films")
+            .then((resp) => resp.json())
+            .then(({ results }) => {
+                setPlanets(results);
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
+    }, []);
+    //Views the films
     return (
         <View style={styles.container}>
-            <Text>Star Wars</Text>
+            <Text style={styles.title}>Films</Text>
+            <FlatList
+                data={planets}
+                keyExtractor={(item) => item.uid}
+                renderItem={({ item }) => (
+                    <View style={styles.item}>
+                        <Text>{item.name}</Text>
+                    </View>
+                )}
+            />
         </View>
     );
 }

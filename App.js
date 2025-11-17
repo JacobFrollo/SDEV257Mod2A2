@@ -6,9 +6,11 @@ import Planets from "./Planets";
 import Films from "./Films";
 import Spaceships from "./Spaceships";
 
+//Creates navigation
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
+//Builds the app
 export default function App() {
     return (
         <NavigationContainer>
