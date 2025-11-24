@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Platform } from "react-native";
 import Planets from "./Planets";
 import Films from "./Films";
 import Spaceships from "./Spaceships";
