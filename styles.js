@@ -22,4 +22,14 @@ export default StyleSheet.create({
         height: 20,
         fontSize: 11,
     },
+
+    scroll: {
+        height: 1,
+        alignSelf: "stretch",
+    },
+
+    scrollItem: {
+        margin: 20,
+        alignSelf: "center",
+    },
 });
