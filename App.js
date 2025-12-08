@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -17,6 +17,7 @@ import Animated, {
     useSharedValue,
     withSpring,
 } from "react-native-reanimated";
+import NetInfo from "@react-native-community/netinfo";
 
 //Creates navigation
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,14 @@ Input.propTypes = {
     label: PropTypes.string,
 };
 
+//Connection messages
+const connectedMap = {
+    none: "Disconnected from internet",
+    unknown: "Disconnected from internet",
+    wifi: "Connected to wifi",
+    cell: "Connected to cell",
+    mobile: "Connected to mobile",
+};
 
 //Builds the app
 export default function App() {
@@ -85,19 +94,31 @@ export default function App() {
         setAlertVisible(!alertVisible);
     }
 
+    const [connected, setConnected] = useState("");
+
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            const type = state.type?.toLowerCase();
+            setConnected(connectedMap[type] || "Unknown connection");
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     //Show app
     return (
-            <View style={styles.container}>
+        <View style={styles.container}>
             <LazyImage
                 style={{ width: 200, height: 150 }}
                 resizeMode="contain"
                 source={"https://m.media-amazon.com/images/M/MV5BMTA0Mjc0NzExNzBeQTJeQWpwZ15BbWU3MDEzMzQ3MDI@._V1_FMjpg_UX1000_.jpg"}
             />
+            <Text>{connected}</Text>
             <Input
-                    onSubmitEditing={(e) => {
-                        setSubmittedText(e.nativeEvent.text);
-                        toggleAlert();
-                    }}
+                onSubmitEditing={(e) => {
+                    setSubmittedText(e.nativeEvent.text);
+                    toggleAlert();
+                }}
             />
             <ConfirmationModal
                 animationType="fade"
@@ -105,11 +126,11 @@ export default function App() {
                 onPressConfirm={toggleModal}
                 onPressCancel={toggleModal}
             />
-                <ConfirmationAlert
-                    title="Your Message:"
-                    message={submittedText}
-                    visible={alertVisible}
-                    buttons={[{ text: "OK", onPress: toggleAlert }]}
+            <ConfirmationAlert
+                title="Your Message:"
+                message={submittedText}
+                visible={alertVisible}
+                buttons={[{ text: "OK", onPress: toggleAlert }]}
             />
             <Animated.View style={[styles.buttonContainer, animatedStyles]}>
                 <Pressable
@@ -124,30 +145,30 @@ export default function App() {
                 </Pressable>
             </Animated.View>
             <NavigationContainer>
-            {Platform.OS === "ios" && (
-                <Tab.Navigator>
-                    <Tab.Screen name="Planets" component={Planets} />
-                    <Tab.Screen name="Films" component={Films} />
-                    <Tab.Screen name="Spaceships" component={Spaceships} />
-                </Tab.Navigator>
-            )}
+                {Platform.OS === "ios" && (
+                    <Tab.Navigator>
+                        <Tab.Screen name="Planets" component={Planets} />
+                        <Tab.Screen name="Films" component={Films} />
+                        <Tab.Screen name="Spaceships" component={Spaceships} />
+                    </Tab.Navigator>
+                )}
 
-            {Platform.OS === "android" && (
-                <Drawer.Navigator>
-                    <Drawer.Screen name="Planets" component={Planets} />
-                    <Drawer.Screen name="Films" component={Films} />
-                    <Drawer.Screen name="Spaceships" component={Spaceships} />
-                </Drawer.Navigator>
-            )}
+                {Platform.OS === "android" && (
+                    <Drawer.Navigator>
+                        <Drawer.Screen name="Planets" component={Planets} />
+                        <Drawer.Screen name="Films" component={Films} />
+                        <Drawer.Screen name="Spaceships" component={Spaceships} />
+                    </Drawer.Navigator>
+                )}
 
-            {Platform.OS === "web" && (
-                <Tab.Navigator>
-                    <Tab.Screen name="Planets" component={Planets} />
-                    <Tab.Screen name="Films" component={Films} />
-                    <Tab.Screen name="Starships" component={Spaceships} />
-                </Tab.Navigator>
-            )}
-        </NavigationContainer>
+                {Platform.OS === "web" && (
+                    <Tab.Navigator>
+                        <Tab.Screen name="Planets" component={Planets} />
+                        <Tab.Screen name="Films" component={Films} />
+                        <Tab.Screen name="Starships" component={Spaceships} />
+                    </Tab.Navigator>
+                )}
+            </NavigationContainer>
         </View >
     );
 }
